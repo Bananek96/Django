@@ -1,9 +1,14 @@
 {% extends 'szablon.html' %}
+{% load crispy_forms_filters %}
 {% block naglowek %}Twoje konto: {% endblock naglowek %}
 {% block tresc %}
 
     {% if user.is_authenticated %}
         <p>Witaj {{ user.username }}.</p>
+        <form action="." method="POST">
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-success">Zapisz</button>
+        </form>
     {% else %}
         <form action="." method="POST">
         {% csrf_token %}

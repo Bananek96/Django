@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 
+from .models import Person
 from users.forms import UserLoginForm
 
 
@@ -49,3 +50,5 @@ def wyloguj_user(request):
     logout(request)
     messages.info(request, "Zostałeś wylogowany!")
     return redirect(reverse('users:index'))
+
+

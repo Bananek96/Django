@@ -1,0 +1,11 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Witaj na Forum {% endblock naglowek %}
+{% block tresc %}
+
+    {% if user.is_authenticated %}
+        <p>Witaj {{ user.username }}.</p>
+    {% else %}
+        <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
+    {% endif %}
+
+{% endblock tresc %}
