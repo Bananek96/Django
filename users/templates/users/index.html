@@ -2,17 +2,17 @@
 {% load crispy_forms_filters %}
 {% block naglowek %}Twoje konto: {% endblock naglowek %}
 {% block tresc %}
+    {% load crispy_forms_tags %}
 
     {% if user.is_authenticated %}
         <p>Witaj {{ user.username }}.</p>
         <form action="." method="POST">
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-success">Zapisz</button>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input type="submit" value="Zapisz">
         </form>
     {% else %}
         <form action="." method="POST">
-        {% csrf_token %}
-        {{ form.as_p }}
         <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
         </form>
     {% endif %}

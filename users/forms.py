@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import ModelForm
+from users.models import *
 
 
 class UserLoginForm(forms.Form):
@@ -13,3 +15,37 @@ class UserLoginForm(forms.Form):
         required=True,
         widget=forms.TextInput(attrs={'class': 'form-control', 'type': 'password'})
     )
+
+
+class UserForm(forms.Form):
+    first_name = forms.CharField(
+        label="Imie",
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    last_name = forms.CharField(
+        label="Nazwisko",
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    email = forms.EmailField(
+        label="Email",
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    job_title = forms.CharField(
+        label="Praca",
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    bio = forms.CharField(
+        label="BIO",
+        max_length=150,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+
+
+class UserModelForm(ModelForm):
+    class Meta:
+        model = Person
+        fields = ('first_name', 'last_name', 'email', 'job_title', 'bio',)

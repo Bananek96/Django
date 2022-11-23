@@ -5,11 +5,36 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 
 from .models import Person
-from users.forms import UserLoginForm
+from users.forms import UserLoginForm, UserForm, UserModelForm
+
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
 
 
 def index(request):
-    return render(request, 'users/index.html')
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            p = Person(first_name=form.cleaned_data['first_name'],
+                       last_name=form.cleaned_data['last_name'],
+                       email=form.cleaned_data['email'],
+                       job_title=form.cleaned_data['job_title'],
+                       bio=form.cleaned_data['bio']
+                       )
+            p.save()
+            messages.success(request, "Poprawnie dodano informacje!")
+            return redirect(reverse('users:people'))
+        else:
+            messages.error(request, "Niepoprawne dane!")
+    else:
+        form = UserForm()
+
+    people = Person.objects.all()
+    kontekst = {'people': people, 'form': form}
+    return render(request, 'users/index.html', kontekst)
 
 
 def rejestruj(request):
@@ -52,3 +77,14 @@ def wyloguj_user(request):
     return redirect(reverse('users:index'))
 
 
+@method_decorator(login_required, name='dispatch')
+class ChangePeople(SuccessMessageMixin, UpdateView):
+    model = Person
+    form_class = UserModelForm
+    template_name = 'users/index.html'
+    success_message = 'Zaktualizowano informacje użytkownika!'
+
+    def get_context_data(self, **kwargs):
+        context = super(ChangePeople, self).get_context_data(**kwargs)
+        context['people'] = Person.objects.all()
+        return context
