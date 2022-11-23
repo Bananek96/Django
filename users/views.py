@@ -6,8 +6,10 @@ from django.contrib.auth import authenticate, login, logout
 
 from users.forms import UserLoginForm
 
+
 def index(request):
     return render(request, 'users/index.html')
+
 
 def rejestruj(request):
     if request.method == 'POST':

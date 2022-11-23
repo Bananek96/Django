@@ -1,7 +1,15 @@
 {% extends 'szablon.html' %}
-{% block naglowek %}Użytkownik{% endblock naglowek %}
+{% block naglowek %}Twoje konto: {% endblock naglowek %}
 {% block tresc %}
 
-    <h2>Witaj na stronie użytkowników!.</h2>
+    {% if user.is_authenticated %}
+        <p>Witaj {{ user.username }}.</p>
+    {% else %}
+        <form action="." method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
+        </form>
+    {% endif %}
 
 {% endblock tresc %}
