@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Person(models.Model):
+class User(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     email = models.EmailField(blank=True)
@@ -12,4 +12,4 @@ class Person(models.Model):
         return self.first_name + ' ' + self.last_name
 
     class Meta:
-        verbose_name_plural = "people"
+        verbose_name_plural = "users"

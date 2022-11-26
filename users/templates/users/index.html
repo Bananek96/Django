@@ -5,12 +5,7 @@
     {% load crispy_forms_tags %}
 
     {% if user.is_authenticated %}
-        <p>Witaj {{ user.username }}.</p>
-        <form action="." method="POST">
-            {% csrf_token %}
-            {{ form|crispy }}
-            <input type="submit" value="Zapisz">
-        </form>
+        <a href="{% url 'users:user_info' %}" class="btn btn-info" role="button">Zobacz dane</a>
     {% else %}
         <form action="." method="POST">
         <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>

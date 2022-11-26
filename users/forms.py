@@ -47,5 +47,5 @@ class UserForm(forms.Form):
 
 class UserModelForm(ModelForm):
     class Meta:
-        model = Person
+        model = User
         fields = ('first_name', 'last_name', 'email', 'job_title', 'bio',)

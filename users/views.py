@@ -4,37 +4,14 @@ from django.urls import reverse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 
-from .models import Person
-from users.forms import UserLoginForm, UserForm, UserModelForm
+from .models import User
+from users.forms import UserLoginForm, UserForm
 
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import UpdateView
-from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import ListView
 
 
 def index(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            p = Person(first_name=form.cleaned_data['first_name'],
-                       last_name=form.cleaned_data['last_name'],
-                       email=form.cleaned_data['email'],
-                       job_title=form.cleaned_data['job_title'],
-                       bio=form.cleaned_data['bio']
-                       )
-            p.save()
-            messages.success(request, "Poprawnie dodano informacje!")
-            return redirect(reverse('users:people'))
-        else:
-            messages.error(request, "Niepoprawne dane!")
-    else:
-        form = UserForm()
-
-    people = Person.objects.all()
-    kontekst = {'people': people, 'form': form}
-    return render(request, 'users/index.html', kontekst)
+    return render(request, 'users/index.html')
 
 
 def rejestruj(request):
@@ -77,14 +54,31 @@ def wyloguj_user(request):
     return redirect(reverse('users:index'))
 
 
-@method_decorator(login_required, name='dispatch')
-class ChangePeople(SuccessMessageMixin, UpdateView):
-    model = Person
-    form_class = UserModelForm
-    template_name = 'users/index.html'
-    success_message = 'Zaktualizowano informacje użytkownika!'
+def users(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            p = User(first_name=form.cleaned_data['first_name'],
+                     last_name=form.cleaned_data['last_name'],
+                     email=form.cleaned_data['email'],
+                     job_title=form.cleaned_data['job_title'],
+                     bio=form.cleaned_data['bio']
+                     )
+            p.save()
+            messages.success(request, "Poprawnie dodano informacje!")
+            return redirect(reverse('users:users'))
+        else:
+            messages.error(request, "Niepoprawne dane!")
+    else:
+        form = UserForm()
 
-    def get_context_data(self, **kwargs):
-        context = super(ChangePeople, self).get_context_data(**kwargs)
-        context['people'] = Person.objects.all()
-        return context
+    user = User.objects.all()
+    kontekst = {'users': user, 'form': form}
+    return render(request, 'users/user_info.html', kontekst)
+
+
+class UsersList(ListView):
+    model = User
+    context_object_name = 'Informacje'
+    template_name = 'users/user_info.html'

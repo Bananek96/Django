@@ -1,0 +1,16 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Informacje{% endblock naglowek %}
+{% block tresc %}
+
+<h2>Twoje dane: </h2>
+<ol>
+    {% for user in users %}
+    <li>{{ user.first_name }}</li>
+    <li>{{ user.last_name }}</li>
+    <li>{{ user.email }}</li>
+    <li>{{ user.job_title }}</li>
+    <li>{{ user.bio }}</li>
+    {% endfor %}
+</ol>
+
+{% endblock tresc %}
