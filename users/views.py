@@ -1,13 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
 
-from .models import User
-from users.forms import UserLoginForm, UserForm
-
-from django.views.generic import ListView
+from .models import UserProfile
+from users.forms import UserLoginForm, UserForm, UserModelForm
 
 
 def index(request):
@@ -54,31 +56,37 @@ def wyloguj_user(request):
     return redirect(reverse('users:index'))
 
 
-def users(request):
+def user_info(request):
     if request.method == 'POST':
         form = UserForm(request.POST)
         if form.is_valid():
             print(form.cleaned_data)
-            p = User(first_name=form.cleaned_data['first_name'],
-                     last_name=form.cleaned_data['last_name'],
-                     email=form.cleaned_data['email'],
-                     job_title=form.cleaned_data['job_title'],
-                     bio=form.cleaned_data['bio']
-                     )
+            p = UserProfile(first_name=form.cleaned_data['first_name'],
+                            last_name=form.cleaned_data['last_name'],
+                            email=form.cleaned_data['email'],
+                            city=form.cleaned_data['city'],
+                            bio=form.cleaned_data['bio'])
             p.save()
             messages.success(request, "Poprawnie dodano informacje!")
-            return redirect(reverse('users:users'))
+            return redirect(reverse('users:index'))
         else:
             messages.error(request, "Niepoprawne dane!")
     else:
         form = UserForm()
 
-    user = User.objects.all()
-    kontekst = {'users': user, 'form': form}
+    users = UserProfile.objects.all()
+    kontekst = {'users': users, 'form': form}
     return render(request, 'users/user_info.html', kontekst)
 
-
-class UsersList(ListView):
-    model = User
-    context_object_name = 'Informacje'
+@method_decorator(login_required, name='dispatch')
+class EditUser(SuccessMessageMixin, UpdateView):
+    model = UserProfile
+    form_class = UserModelForm
     template_name = 'users/user_info.html'
+    success_url = reverse_lazy('users:index')
+    success_message = 'Zaktualizowano informacje!'
+
+    def get_context_data(self, **kwargs):
+        context = super(EditUser, self).get_context_data(**kwargs)
+        context['users'] = UserProfile.objects.all()
+        return context

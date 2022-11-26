@@ -2,15 +2,16 @@
 {% block naglowek %}Informacje{% endblock naglowek %}
 {% block tresc %}
 
-<h2>Twoje dane: </h2>
-<ol>
-    {% for user in users %}
-    <li>{{ user.first_name }}</li>
-    <li>{{ user.last_name }}</li>
-    <li>{{ user.email }}</li>
-    <li>{{ user.job_title }}</li>
-    <li>{{ user.bio }}</li>
-    {% endfor %}
-</ol>
-
+    {% if user.is_authenticated %}
+        <h2>Edytuj dane: </h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Zapisz">
+        </form>
+    {% else %}
+        <form action="." method="POST">
+        <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
+        </form>
+    {% endif %}
 {% endblock tresc %}

@@ -33,8 +33,8 @@ class UserForm(forms.Form):
         max_length=30,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
-    job_title = forms.CharField(
-        label="Praca",
+    city= forms.CharField(
+        label="Miasto",
         max_length=30,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
@@ -47,5 +47,5 @@ class UserForm(forms.Form):
 
 class UserModelForm(ModelForm):
     class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email', 'job_title', 'bio',)
+        model = UserProfile
+        fields = ('first_name', 'last_name', 'email', 'city', 'bio',)
