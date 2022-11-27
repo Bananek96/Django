@@ -17,34 +17,6 @@ class UserLoginForm(forms.Form):
     )
 
 
-class UserForm(forms.Form):
-    first_name = forms.CharField(
-        label="Imie",
-        max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
-    )
-    last_name = forms.CharField(
-        label="Nazwisko",
-        max_length=30,
-        widget=forms.TextInput()
-    )
-    email = forms.EmailField(
-        label="Email",
-        max_length=30,
-        widget=forms.TextInput()
-    )
-    city = forms.CharField(
-        label="Miasto",
-        max_length=30,
-        widget=forms.TextInput()
-    )
-    bio = forms.CharField(
-        label="BIO",
-        max_length=150,
-        widget=forms.TextInput()
-    )
-
-
 class UserModelForm(ModelForm):
     class Meta:
         model = UserProfile

@@ -5,18 +5,20 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import UpdateView, CreateView
+from django.views.generic.edit import UpdateView
 from django.contrib.messages.views import SuccessMessageMixin
-
+from django.views.generic import ListView
 from .models import UserProfile
-from users.forms import UserLoginForm, UserForm, UserModelForm
+from users.forms import UserLoginForm, UserModelForm
 
 
-def index(request):
-    return render(request, 'users/index.html')
+class Index(ListView):
+    model = UserProfile
+    context_object_name = 'users'
+    template_name = 'users/index.html'
 
 
-def rejestruj(request):
+def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -54,23 +56,6 @@ def wyloguj_user(request):
     logout(request)
     messages.info(request, "Zostałeś wylogowany!")
     return redirect(reverse('users:index'))
-
-
-@method_decorator(login_required, name='dispatch')
-class UserInfo(CreateView):
-    model = UserProfile
-    form_class = UserForm
-    template_name = 'users/user_info.html'
-    success_url = reverse_lazy('users:index')
-
-    def get_context_data(self, **kwargs):
-        context = super(UserInfo, self).get_context_data(**kwargs)
-        context['users'] = UserProfile.objects.all()
-        return context
-
-    def form_valid(self, form):
-        messages.success(self.request, "Dodano dane!")
-        return super().form_valid(form)
 
 
 @method_decorator(login_required, name='dispatch')
