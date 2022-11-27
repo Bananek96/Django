@@ -6,7 +6,7 @@
     {% if user.is_authenticated %}
         {% csrf_token %}
         <p>Nick: <b>{{ user }}</b></p>
-        <p>Imie: <b>{{ user.first_name }}</b></p>
+        <p>Imie: <b>{{ users.first_name }}</b></p>
         <p>Nazwisko: <b>{{ users.last_name }}</b></p>
         <p>Email: <b>{{ users.email }}</b></p>
         <p>Miasto: <b>{{ users.city }}</b></p>

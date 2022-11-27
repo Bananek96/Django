@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import UpdateView
+from django.views.generic.edit import UpdateView, CreateView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import UserProfile
@@ -56,27 +56,22 @@ def wyloguj_user(request):
     return redirect(reverse('users:index'))
 
 
-def user_info(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            print(form.cleaned_data)
-            p = UserProfile(first_name=form.cleaned_data['first_name'],
-                            last_name=form.cleaned_data['last_name'],
-                            email=form.cleaned_data['email'],
-                            city=form.cleaned_data['city'],
-                            bio=form.cleaned_data['bio'])
-            p.save()
-            messages.success(request, "Poprawnie dodano informacje!")
-            return redirect(reverse('users:index'))
-        else:
-            messages.error(request, "Niepoprawne dane!")
-    else:
-        form = UserForm()
+@method_decorator(login_required, name='dispatch')
+class UserInfo(CreateView):
+    model = UserProfile
+    form_class = UserForm
+    template_name = 'users/user_info.html'
+    success_url = reverse_lazy('users:index')
 
-    users = UserProfile.objects.all()
-    kontekst = {'users': users, 'form': form}
-    return render(request, 'users/user_info.html', kontekst)
+    def get_context_data(self, **kwargs):
+        context = super(UserInfo, self).get_context_data(**kwargs)
+        context['users'] = UserProfile.objects.all()
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, "Dodano dane!")
+        return super().form_valid(form)
+
 
 @method_decorator(login_required, name='dispatch')
 class EditUser(SuccessMessageMixin, UpdateView):

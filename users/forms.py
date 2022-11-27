@@ -26,22 +26,22 @@ class UserForm(forms.Form):
     last_name = forms.CharField(
         label="Nazwisko",
         max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput()
     )
     email = forms.EmailField(
         label="Email",
         max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput()
     )
-    city= forms.CharField(
+    city = forms.CharField(
         label="Miasto",
         max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput()
     )
     bio = forms.CharField(
         label="BIO",
         max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        widget=forms.TextInput()
     )
 
 
