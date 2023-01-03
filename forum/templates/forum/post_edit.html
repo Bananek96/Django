@@ -1,0 +1,15 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Witaj na Forum {% endblock naglowek %}
+{% block tresc %}
+
+    {% if user.is_authenticated %}
+        <h1>Nowy post</h1>
+        <form method="POST" class="post-form">{% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="save btn btn-default" role="button">Save</button>
+        </form>
+    {% else %}
+        <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
+    {% endif %}
+
+{% endblock tresc %}
