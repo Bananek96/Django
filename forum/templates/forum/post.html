@@ -1,16 +1,14 @@
 {% extends 'szablon.html' %}
-{% block naglowek %}Witaj na Forum {% endblock naglowek %}
-{% block tresc %}
-
-        <h1>
+{% block naglowek %}
         <a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a>
         {% if user.is_authenticated and user == post.author %}
-            <a class="btn btn-default" href="{% url 'forum:post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+            <a class="btn btn-default" href="{% url 'forum:post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span>Edytuj</a>
         {% endif %}
-        </h1>
-        <h6>Kategoria: {{ post.category }} | Autor: {{ post.author }} | {{ post.published_date }}</h6>
+        <h6>Autor: {{ post.author }} | {{ post.published_date }}</h6>
         <p>{{ post.description|linebreaksbr }}</p>
         <p>{{ post.author.userprofile.signature }}</p>
+{% endblock naglowek %}
+{% block tresc %}
 
         {% if user.is_authenticated %}
             <a class="btn btn-default" href="{% url 'forum:add_answer' pk=post.pk %}">Dodaj komentarz</a>

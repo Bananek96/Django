@@ -1,39 +1,39 @@
 {% extends 'szablon.html' %}
-{% block naglowek %}Witaj na Forum {% endblock naglowek %}
 {% block tresc %}
 
     {% if user.is_authenticated %}
-        <p><a href="{% url 'forum:post_new' %}" class="btn btn-info" role="button">Nowy post</a></p>
+        <p><a href="{% url 'forum:new_post' %}" class="btn btn-info" role="button">Nowy post</a></p>
 
-        {% for post in posts %}
-            <h1><a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a></h1>
-            <h6>Kategoria: {{ post.category }} | Autor: {{ post.author }} | {{ post.published_date }}</h6>
-            <p>{{ post.description|linebreaksbr|truncatechars:30 }}</p>
-        {% endfor %}
-
-        {% if posts.has_other_pages %}
-            <ul class="pagination">
-            {% if posts.has_previous %}
-                <li><a href="?page={{ posts.previous_page_number }}">&laquo;</a></li>
-            {% else %}
-                <li class="disabled"><span>&laquo;</span></li>
-            {% endif %}
-            {% for i in posts.paginator.page_range %}
-                {% if posts.number == i %}
-                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                {% else %}
-                    <li><a href="?page={{ i }}">{{ i }}</a></li>
-                {% endif %}
-            {% endfor %}
-            {% if posts.has_next %}
-                <li><a href="?page={{ posts.next_page_number }}">&raquo;</a></li>
-            {% else %}
-                <li class="disabled"><span>&raquo;</span></li>
-              {% endif %}
-            </ul>
-        {% endif %}
     {% else %}
         <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
     {% endif %}
+
+    {% for post in posts %}
+        <h1><a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a></h1>
+        <h6>Autor: {{ post.author }} | {{ post.published_date }}</h6>
+        <p>{{ post.description|linebreaksbr|truncatechars:30 }}</p>
+    {% endfor %}
+
+    {% if posts.has_other_pages %}
+       <ul class="pagination">
+       {% if posts.has_previous %}
+           <li><a href="?page={{ posts.previous_page_number }}">&laquo;</a></li>
+       {% else %}
+           <li class="disabled"><span>&laquo;</span></li>
+       {% endif %}
+       {% for i in posts.paginator.page_range %}
+           {% if posts.number == i %}
+               <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+           {% else %}
+               <li><a href="?page={{ i }}">{{ i }}</a></li>
+           {% endif %}
+       {% endfor %}
+       {% if posts.has_next %}
+           <li><a href="?page={{ posts.next_page_number }}">&raquo;</a></li>
+       {% else %}
+           <li class="disabled"><span>&raquo;</span></li>
+       {% endif %}
+       </ul>
+       {% endif %}
 
 {% endblock tresc %}

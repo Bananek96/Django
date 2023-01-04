@@ -3,10 +3,9 @@
 {% block tresc %}
 
     {% if user.is_authenticated %}
-        <h1>Nowy komentarz</h1>
         <form method="POST" class="post-form">{% csrf_token %}
             {{ form.as_p }}
-            <button onclick="{% url 'forum:post<pk>' %}" type="submit" class="save btn btn-default">Dodaj</button>
+            <button onclick="{% url 'forum:index' %}" type="submit" class="save btn btn-info">Dodaj</button>
         </form>
     {% else %}
         <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>

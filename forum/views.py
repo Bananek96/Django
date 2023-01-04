@@ -26,7 +26,7 @@ def post_new(request):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-            return redirect('forum/post.html', pk=post.pk)
+            return redirect('forum:post', pk=post.pk)
     else:
         form = PostForm()
     return render(request, 'forum/post_edit.html', {'form': form})
@@ -41,7 +41,7 @@ def post_edit(request, pk):
             post.author = request.user
             post.published_date = timezone.now()
             post.save()
-            return redirect('forum/index.html', pk=post.pk)
+            return redirect('forum:post', pk=post.pk)
     else:
         form = PostForm(instance=post)
     return render(request, 'forum/post_edit.html', {'form': form})
@@ -56,7 +56,7 @@ def add_answer(request, pk):
             answer.author = request.user
             answer.post = post
             answer.save()
-            return redirect('forum/post.html', pk=post.pk)
+            return redirect('forum:post', pk=post.pk)
     else:
         form = AnswerForm()
     return render(request, 'forum/comments.html', {'form': form})
