@@ -1,6 +1,6 @@
 from django import forms
-from django.forms import ModelForm
-from users.models import *
+from .models import UserProfile
+from django.contrib.auth.models import User
 
 
 class UserLoginForm(forms.Form):
@@ -17,37 +17,50 @@ class UserLoginForm(forms.Form):
     )
 
 
-class UserModelForm(ModelForm):
+class EditUserForm(forms.ModelForm):
     first_name = forms.CharField(
-        label="Twój login",
+        label="Imię",
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
     last_name = forms.CharField(
-        label="Twój login",
+        label="Nazwisko",
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
     email = forms.CharField(
-        label="Twój login",
+        label="email",
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
+    class Meta:
+        model = User
+        fields = [
+            "first_name",
+            "last_name",
+            "email"
+        ]
+
+
+class EditUserProfileForm(forms.ModelForm):
     city = forms.CharField(
-        label="Twój login",
+        label="Miasto",
         max_length=50,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
     bio = forms.CharField(
-        label="Twój login",
+        label="Bio",
         max_length=150,
         widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
     class Meta:
         model = UserProfile
-        fields = ('first_name', 'last_name', 'email', 'city', 'bio',)
+        fields = [
+            "city",
+            "bio"
+        ]

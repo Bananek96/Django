@@ -1,17 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    email = models.EmailField(blank=True)
-    city = models.CharField(max_length=30, blank=True)
-    bio = models.TextField(blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    city = models.CharField(max_length=100, default='', blank=True)
+    bio = models.TextField(default='', blank=True)
 
-    def __str__(self):
-        return self.first_name + ' ' + self.last_name
+    def create_profile(sender, **kwargs):  # Funckja, ktora tworzy profile użytkownika
+        user = kwargs["instance"]
+        if kwargs["created"]:
+            user_profile = UserProfile(user=user)
+            user_profile.save()
 
-    class Meta:
-        verbose_name_plural = "users"
+    post_save.connect(create_profile, sender=User)
+
+    def __str__(self):  # Definiujemy funkcje, która zwraca tytuł wpisu
+        return self.user.username

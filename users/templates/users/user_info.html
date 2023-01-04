@@ -1,13 +1,13 @@
 {% extends 'szablon.html' %}
-{% block naglowek %}Informacje{% endblock naglowek %}
 {% block tresc %}
 
     {% if user.is_authenticated %}
         <h2>Edytuj dane: </h2>
         <form method="POST">
             {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" onclick="{% url 'users:index' %}" value="Zapisz">
+                {{ user_form }}
+                {{ profile_form }}
+            <input type="submit" onclick="{% url 'users:index' pk=user.id%}" value="Zapisz" class="btn btn-info">
         </form>
     {% else %}
         <form action="." method="POST">

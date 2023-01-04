@@ -2,13 +2,13 @@
 {% block naglowek %}Logowanie{% endblock naglowek %}
 {% block tresc %}
 
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated %} {% csrf_token %}
         <p>Jesteś już zalogowany jako {{ user.username }}.</p>
     {% else %}
         <form action="." method="POST">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Zaloguj</button>
+        <button onclick="{% url 'forum:index' %}" type="submit" class="btn btn-info">Zaloguj</button>
         </form>
     {% endif %}
 

@@ -1,35 +1,11 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.urls import reverse, reverse_lazy
 from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy, reverse
+from django.views import generic
+from django.contrib.auth.models import User
+from django.shortcuts import render, get_object_or_404, redirect
+from users.forms import UserLoginForm, EditUserForm, EditUserProfileForm
 from django.contrib.auth import authenticate, login, logout
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
-from django.views.generic.edit import UpdateView
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import ListView
-from .models import UserProfile
-from users.forms import UserLoginForm, UserModelForm
-
-
-class Index(ListView):
-    model = UserProfile
-    context_object_name = 'users'
-    template_name = 'users/index.html'
-
-
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Utworzono konto! Możesz się zalogować!")
-            return redirect(reverse('users:index'))
-    else:
-        form = UserCreationForm()
-
-    kontekst = {'form': form}
-    return render(request, 'users/rejestruj.html', kontekst)
+from django.contrib import messages
 
 
 def loguj_user(request):
@@ -42,7 +18,7 @@ def loguj_user(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, "Zostałeś zalogowany!")
-                return redirect(reverse('users:index'))
+                return redirect(reverse('forum:index'))
             else:
                 messages.error(request, "Błędny login lub hasło!")
     else:
@@ -52,21 +28,37 @@ def loguj_user(request):
     return render(request, 'users/loguj_user.html', kontekst)
 
 
+class SignUp(generic.CreateView):
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'users/loguj_user.html'
+
+
 def wyloguj_user(request):
     logout(request)
     messages.info(request, "Zostałeś wylogowany!")
-    return redirect(reverse('users:index'))
+    return redirect(reverse('forum:index'))
 
 
-@method_decorator(login_required, name='dispatch')
-class EditUser(SuccessMessageMixin, UpdateView):
-    model = UserProfile
-    form_class = UserModelForm
-    template_name = 'users/user_info.html'
-    success_url = reverse_lazy('users:index')
-    success_message = 'Zaktualizowano informacje!'
+def user_detail(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    userprofile = user.userprofile
+    return render(request, 'users/index.html', {'userprofile': userprofile})
 
-    def get_context_data(self, **kwargs):
-        context = super(EditUser, self).get_context_data(**kwargs)
-        context['users'] = UserProfile.objects.all()
-        return context
+
+def edit_user_profile(request, pk):
+    user = get_object_or_404(User, pk=pk)
+    user_profile = user.userprofile
+
+    user_form = EditUserForm(request.POST or None, instance=user)
+    profile_form = EditUserProfileForm(request.POST or None, instance=user_profile)
+
+    if request.method == "POST" and user_form.is_valid() and profile_form.is_valid():
+        user_form.save()
+        profile_form.save()
+        return redirect(f"/users/{pk}")
+
+    return render(request, "users/user_info.html", {
+        "user_form": user_form,
+        "profile_form": profile_form
+    })

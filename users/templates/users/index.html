@@ -5,15 +5,13 @@
 
     {% if user.is_authenticated %}
         {% csrf_token %}
-        {% for user in users %}
-        <p>Nick: <b>{{ user.user }}&nbsp</b></p>
+        <p>Nick: <b>{{ user.username }}&nbsp</b></p>
         <p>Imie: <b>{{ user.first_name }}&nbsp</b></p>
         <p>Nazwisko: <b>{{ user.last_name }}&nbsp</b></p>
         <p>Email: <b>{{ user.email }}&nbsp</b></p>
-        <p>Miasto: <b>{{ user.city }}&nbsp</b></p>
-        <p>Bio: <b>{{ user.bio }}&nbsp</b></p>
-        <p><a href="{% url 'users:user_info' user.id %}" class="btn btn-info" role="button">Edytuj dane<span class="glyphicon glyphicon-pencil"></span></a></p>
-        {% endfor %}
+        <p>Miasto: <b>{{ userprofile.city }}&nbsp</b></p>
+        <p>Bio: <b>{{ userprofile.bio }}&nbsp</b></p>
+        <p><a href="{% url 'users:user_info' pk=user.id %}" class="btn btn-info" role="button">Edytuj dane<span class="glyphicon glyphicon-pencil"></span></a></p>
     {% else %}
         <form action="." method="POST">
         <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
