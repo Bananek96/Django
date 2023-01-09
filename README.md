@@ -1,2 +1,3 @@
-# Programowanie w internecie
-Projekt z programowania w internecie w formie aplikacji sieciowej w Django
+# Project for programowanie w internecie
+
+Internet programming project in the form of a web application in Django
