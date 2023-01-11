@@ -3,12 +3,6 @@ from .models import Post, Answer
 from django.utils import timezone
 from .forms import PostForm, AnswerForm
 from django.core.paginator import Paginator
-from django.views.generic.edit import UpdateView
-from django.utils.decorators import method_decorator
-from django.views.generic import DeleteView
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
 
 
 def posts_list(request):
@@ -61,9 +55,26 @@ def add_answer(request, pk):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.author = request.user
+            answer.author.id = request.user.id
             answer.post = post
             answer.save()
-            return redirect('forum:post', pk=post.pk)
+            return redirect('forum:post', pk=post.pk, an=answer.id)
     else:
         form = AnswerForm()
+    return render(request, 'forum/comments.html', {'form': form})
+
+
+def answer_edit(request, pk, an):
+    post = get_object_or_404(Post, pk=pk)
+    answer = get_object_or_404(Answer, an=an)
+    if request.method == "POST":
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user
+            answer.post = post
+            answer.save()
+            return redirect('forum:post', pk=post.pk, an=answer.id)
+    else:
+        form = AnswerForm(instance=answer)
     return render(request, 'forum/comments.html', {'form': form})

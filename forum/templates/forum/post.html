@@ -18,10 +18,10 @@
         {% for answer in post.answers.all %}
             <table class="table">
             <tr class="info">
-            <td>{{ answer.author }}</td>
+                <td><a href="{% url 'users:index' pk=answer.author.id %}">{{ answer.author }}</a></td>
             <td><strong>{{ answer.published_date }}</strong></td>
             {% if user == answer.author %}
-                <td><a class="btn btn-default" href="#">Edytuj</a></td>
+                <td><a class="btn btn-default" href="{% url 'forum:edit_answer' pk=post.pk an=answer.id %}">Edytuj</a></td>
                 <td><a class="btn btn-default" href="#">Usun</a></td>
             {% endif %}
             </tr>
