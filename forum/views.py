@@ -1,8 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post
+from .models import Post, Answer
 from django.utils import timezone
 from .forms import PostForm, AnswerForm
 from django.core.paginator import Paginator
+from django.views.generic.edit import UpdateView
+from django.utils.decorators import method_decorator
+from django.views.generic import DeleteView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 
 
 def posts_list(request):
@@ -24,6 +30,7 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.author.id = request.user.id
             post.published_date = timezone.now()
             post.save()
             return redirect('forum:post', pk=post.pk)

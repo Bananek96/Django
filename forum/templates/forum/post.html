@@ -20,6 +20,10 @@
             <tr class="info">
             <td>{{ answer.author }}</td>
             <td><strong>{{ answer.published_date }}</strong></td>
+            {% if user == answer.author %}
+                <td><a class="btn btn-default" href="#">Edytuj</a></td>
+                <td><a class="btn btn-default" href="#">Usun</a></td>
+            {% endif %}
             </tr>
             <tr class="info">
             <td colspan="2">{{ answer.text|linebreaks }}</td>
