@@ -5,10 +5,10 @@
 
     {% if user.is_authenticated %}
         {% csrf_token %}
-        <p>Nick: <b>{{ user.username }}&nbsp</b></p>
-        <p>Imie: <b>{{ user.first_name }}&nbsp</b></p>
-        <p>Nazwisko: <b>{{ user.last_name }}&nbsp</b></p>
-        <p>Email: <b>{{ user.email }}&nbsp</b></p>
+        <p>Nick: <b>{{ userprofile.user.username }}&nbsp</b></p>
+        <p>Imie: <b>{{ userprofile.user.first_name }}&nbsp</b></p>
+        <p>Nazwisko: <b>{{ userprofile.user.last_name }}&nbsp</b></p>
+        <p>Email: <b>{{ userprofile.user.email }}&nbsp</b></p>
         <p>Miasto: <b>{{ userprofile.city }}&nbsp</b></p>
         <p>Bio: <b>{{ userprofile.bio }}&nbsp</b></p>
         <p><a href="{% url 'users:user_info' pk=user.id %}" class="btn btn-info" role="button">Edytuj dane<span class="glyphicon glyphicon-pencil"></span></a></p>

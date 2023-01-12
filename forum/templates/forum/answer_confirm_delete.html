@@ -1,0 +1,12 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Usuwanie{% endblock naglowek %}
+{% block tresc %}
+
+    <form method="POST">
+    {% csrf_token %}
+        <p class="lead">Na pewno usunąć:</p><br>
+        {{ form.as_p }}
+        <input type="submit" value="Usun">
+    </form>
+
+{% endblock tresc %}

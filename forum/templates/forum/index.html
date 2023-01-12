@@ -9,7 +9,7 @@
     {% for post in posts %}
         <h1><a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a></h1>
         <h6>
-            Autor: <a href="{% url 'users:index' user.id %}">{{ post.author }}</a> | {{ post.published_date }}
+            Autor: <a href="{% url 'users:index' pk=post.author.id %}">{{ post.author }}</a> | {{ post.published_date }}
         </h6>
         <p>{{ post.description }}</p>
     {% endfor %}

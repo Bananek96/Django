@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post
+from .models import Post, Answer
 from django.utils import timezone
 from .forms import PostForm, AnswerForm
 from django.core.paginator import Paginator
@@ -24,6 +24,7 @@ def post_new(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
+            post.author.id = request.user.id
             post.published_date = timezone.now()
             post.save()
             return redirect('forum:post', pk=post.pk)
@@ -54,9 +55,26 @@ def add_answer(request, pk):
         if form.is_valid():
             answer = form.save(commit=False)
             answer.author = request.user
+            answer.author.id = request.user.id
             answer.post = post
             answer.save()
-            return redirect('forum:post', pk=post.pk)
+            return redirect('forum:post', pk=post.pk, an=answer.id)
     else:
         form = AnswerForm()
+    return render(request, 'forum/comments.html', {'form': form})
+
+
+def answer_edit(request, pk, an):
+    post = get_object_or_404(Post, pk=pk)
+    answer = get_object_or_404(Answer, an=an)
+    if request.method == "POST":
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user
+            answer.post = post
+            answer.save()
+            return redirect('forum:post', pk=post.pk, an=answer.id)
+    else:
+        form = AnswerForm(instance=answer)
     return render(request, 'forum/comments.html', {'form': form})
