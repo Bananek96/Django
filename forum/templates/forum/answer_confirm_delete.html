@@ -1,12 +1,11 @@
 {% extends 'szablon.html' %}
-{% block naglowek %}Usuwanie{% endblock naglowek %}
 {% block tresc %}
 
-    <form method="POST">
+<form method="POST">
     {% csrf_token %}
-        <p class="lead">Na pewno usunąć:</p><br>
-        {{ form.as_p }}
-        <input type="submit" value="Usun">
-    </form>
+    <p class="lead">Na pewno usunąć komentarz:</p>
+    <a class="btn btn-default" href="{{request.META.HTTP_REFERER}}">Anuluj</a>
+    <a class="btn btn-info" type="submit" href="{{request.META.HTTP_REFERER}}">Usun</a>
+</form>
 
 {% endblock tresc %}

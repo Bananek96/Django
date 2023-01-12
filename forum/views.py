@@ -7,7 +7,7 @@ from django.core.paginator import Paginator
 
 def posts_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, 5)
     page = request.GET.get('page')
     posts = paginator.get_page(page)
     return render(request, 'forum/index.html', {'posts': posts})
@@ -58,11 +58,16 @@ def add_answer(request, pk):
             answer.author.id = request.user.id
             answer.post = post
             answer.save()
-            return redirect('forum:post', pk=post.pk, an=answer.id)
+            return redirect('forum:answer', pk=post.pk, an=answer.pk)
     else:
         form = AnswerForm()
     return render(request, 'forum/comments.html', {'form': form})
 
+
+def answer_detail(request, pk, an):
+    post = get_object_or_404(Post, pk=pk)
+    answer = get_object_or_404(Answer, pk=an)
+    return render(request, 'forum/view_answer.html', {'post': post}, {'answer': answer})
 
 def answer_edit(request, pk, an):
     post = get_object_or_404(Post, pk=pk)
@@ -74,7 +79,23 @@ def answer_edit(request, pk, an):
             answer.author = request.user
             answer.post = post
             answer.save()
-            return redirect('forum:post', pk=post.pk, an=answer.id)
+            return redirect('forum:answer', pk=post.pk, an=answer.pk)
     else:
         form = AnswerForm(instance=answer)
     return render(request, 'forum/comments.html', {'form': form})
+
+
+def delete_answer(request, pk, an):
+    answer = get_object_or_404(Answer, pk=an)
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = AnswerForm(request.POST, instance=answer)
+        if form.is_valid():
+            answer = form.save(commit=False)
+            answer.author = request.user
+            answer.post = post
+            answer.delete()
+            return redirect('forum:post')
+        else:
+            form = AnswerForm(instance=answer)
+    return render(request, 'forum/answer_confirm_delete.html', {'form': form})
