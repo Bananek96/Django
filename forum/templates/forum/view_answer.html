@@ -1,31 +1,18 @@
 {% extends 'szablon.html' %}
 {% block naglowek %}
-        <a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a>
-        {% if user.is_authenticated and user == post.author %}
-            <a class="btn btn-default" href="{% url 'forum:post_edit' pk=post.pk %}">Edytuj</a>
+        {% if user.is_authenticated and user == answer.author%}
+            <a href="{% url 'forum:edit_answer' pk=post.pk an=answer.id%}">Edytuj</a>
+            <a href="{% url 'forum:delete_answer' pk=post.pk an=answer.id %}">Usun</a>
         {% endif %}
-        <h6>Autor: {{ post.author }} | {{ post.published_date }}</h6>
-        <p>{{ post.description|linebreaksbr }}</p>
-        <p>{{ post.author.userprofile.signature }}</p>
 {% endblock naglowek %}
 {% block tresc %}
 
-        {% if user.is_authenticated and user == answer.author%}
-            <a class="btn btn-default" href="{% url 'forum:add_answer' pk=post.pk %}">Dodaj komentarz</a>
-        {% else %}
-            <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
-        {% endif %}
+
         {% for answer in post.answers.all %}
             <table class="table">
             <tr class="info">
                 <td><a href="{% url 'users:index' pk=answer.author.id %}">{{ answer.author }}</a></td>
             <td><strong>{{ answer.published_date }}</strong></td>
-            {% if user == answer.author %}
-                <td>
-                    <a href="{% url 'forum:edit_answer' pk=post.pk an=answer.id%}">Edytuj</a>
-                    <a href="{% url 'forum:delete_answer' pk=post.pk an=answer.id %}">Usun</a>
-                </td>
-            {% endif %}
             </tr>
             <tr class="info">
             <td colspan="2">{{ answer.text|linebreaks }}</td>
