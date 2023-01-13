@@ -1,17 +1,18 @@
 {% extends 'szablon.html' %}
-{% block naglowek %}Twój profil: {% endblock naglowek %}
+{% block naglowek %}Profil {{ userprofile.user.username }}: {% endblock naglowek %}
 {% block tresc %}
     {% load crispy_forms_tags %}
 
     {% if user.is_authenticated %}
         {% csrf_token %}
-        <p>Nick: <b>{{ userprofile.user.username }}&nbsp</b></p>
-        <p>Imie: <b>{{ userprofile.user.first_name }}&nbsp</b></p>
-        <p>Nazwisko: <b>{{ userprofile.user.last_name }}&nbsp</b></p>
-        <p>Email: <b>{{ userprofile.user.email }}&nbsp</b></p>
-        <p>Miasto: <b>{{ userprofile.city }}&nbsp</b></p>
-        <p>Bio: <b>{{ userprofile.bio }}&nbsp</b></p>
-        <p><a href="{% url 'users:user_info' pk=user.id %}" class="btn btn-info" role="button">Edytuj dane<span class="glyphicon glyphicon-pencil"></span></a></p>
+            <p>Imie: <b>{{ userprofile.user.first_name }}&nbsp</b></p>
+            <p>Nazwisko: <b>{{ userprofile.user.last_name }}&nbsp</b></p>
+            <p>Email: <b>{{ userprofile.user.email }}&nbsp</b></p>
+            <p>Miasto: <b>{{ userprofile.city }}&nbsp</b></p>
+            <p>Bio: <b>{{ userprofile.bio }}&nbsp</b></p>
+            {% if user.username == userprofile.user.username %}
+                <p><a href="{% url 'users:user_info' pk=user.id %}" class="btn btn-info" role="button">Edytuj dane<span class="glyphicon glyphicon-pencil"></span></a></p>
+            {% endif %}
     {% else %}
         <form action="." method="POST">
         <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
