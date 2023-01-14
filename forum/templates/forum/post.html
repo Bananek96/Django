@@ -13,7 +13,10 @@
         {% if user.is_authenticated %}
             <a class="btn btn-default" href="{% url 'forum:add_answer' pk=post.pk %}">Dodaj komentarz</a>
         {% else %}
-            <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
+            <div class="alert alert-info">
+                <p>Aby dodac kometarz musisz byc zalogowany</p>
+                <a href="{% url 'users:loguj' %}" class="btn btn-info" role="button">Zaloguj</a>
+            </div>
         {% endif %}
         {% for answer in post.answers.all %}
             <table class="table">
