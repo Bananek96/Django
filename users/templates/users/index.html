@@ -7,17 +7,19 @@
         {% csrf_token %}
         <div class="card" style="width:400px">
             <div class="card-header"><h4> Profil {{ userprofile.user.username }}:</h4></div>
-            <img class="card-img-top rounded-circle mx-auto d-block" src="https://thispersondoesnotexist.com/image" alt="Card image" style="width:300px">
+            <img class="card-img-top rounded-circle mx-auto d-block mt-2" src="https://thispersondoesnotexist.com/image" alt="Card image" style="width:300px">
+            <div class="dropdown-divider"></div>
             <div class="card-body">
                 <p>Imie: <b>{{ userprofile.user.first_name }}&nbsp</b></p>
                 <p>Nazwisko: <b>{{ userprofile.user.last_name }}&nbsp</b></p>
                 <p>Email: <b>{{ userprofile.user.email }}&nbsp</b></p>
                 <p>Miasto: <b>{{ userprofile.city }}&nbsp</b></p>
                 <p>Bio: <b>{{ userprofile.bio }}&nbsp</b></p>
-        </div>
             {% if user.username == userprofile.user.username %}
                 <p><a href="{% url 'users:user_info' pk=user.id %}" class="btn btn-info" role="button">Edytuj dane<span class="glyphicon glyphicon-pencil"></span></a></p>
             {% endif %}
+            </div>
+        </div>
     {% else %}
         <form action="." method="POST">
             <div class="alert alert-info">

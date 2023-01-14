@@ -1,17 +1,21 @@
 {% extends 'szablon.html' %}
 {% block naglowek %}
-        <a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a>
+<!--        <a href="{% url 'forum:post' pk=post.pk %}">{{ post.title }}</a>-->
+    <div class="container border rounded mt-3">
+        <h1>{{ post.title }}
         {% if user.is_authenticated and user == post.author %}
             <a class="btn btn-default" href="{% url 'forum:post_edit' pk=post.pk %}">Edytuj</a>
         {% endif %}
-        <h6>Autor: {{ post.author }} | {{ post.published_date }}</h6>
-        <p>{{ post.description|linebreaksbr }}</p>
-        <p>{{ post.author.userprofile.signature }}</p>
+        </h1>
+        <h6>Autor: <b>{{ post.author }}</b><br> Data publikacji: {{ post.published_date }}</h6>
+        <div class="dropdown-divider"></div>
+        <h4>{{ post.description|linebreaksbr }}</h4>
+    </div>
 {% endblock naglowek %}
 {% block tresc %}
 
         {% if user.is_authenticated %}
-            <a class="btn btn-default" href="{% url 'forum:add_answer' pk=post.pk %}">Dodaj komentarz</a>
+            <a class="btn btn-primary" href="{% url 'forum:add_answer' pk=post.pk %}">Dodaj komentarz</a>
         {% else %}
             <div class="alert alert-info">
                 <p>Aby dodac kometarz musisz byc zalogowany</p>
@@ -19,18 +23,37 @@
             </div>
         {% endif %}
         {% for answer in post.answers.all %}
-            <table class="table">
-            <tr class="info">
-                <td><a href="{% url 'users:index' pk=answer.author.id %}">{{ answer.author }}</a></td>
-            <td><strong>{{ answer.published_date }}</strong></td>
-            {% if user == answer.author %}
-                <td><a href="{% url 'forum:delete_answer' an=answer.id %}">Usun</a></td>
-            {% endif %}
-            </tr>
+<!--            <table class="table">-->
+<!--            <tr class="info">-->
+<!--                <td><a href="{% url 'users:index' pk=answer.author.id %}">{{ answer.author }}</a></td>-->
+<!--            <td><strong>{{ answer.published_date }}</strong></td>-->
+<!--            {% if user == answer.author %}-->
+<!--                <td><a href="{% url 'forum:delete_answer' an=answer.id %}">Usun</a></td>-->
+<!--            {% endif %}-->
+<!--            </tr>-->
 
-            <tr class="info">
-                <td colspan="2">{{ answer.text|linebreaks|truncatechars:30 }}</td>
-            </tr></table>
+<!--            <tr class="info">-->
+<!--                <td colspan="2">{{ answer.text|linebreaks|truncatechars:30 }}</td>-->
+<!--            </tr></table>-->
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title">
+                        {{ answer.author }}
+                        {% if user == answer.author %}
+                        <a href="{% url 'forum:delete_answer' an=answer.id %}">Usun</a>
+                        {% endif %}
+                    </h5>
+                    <h6 class="card-subtitle">
+                        {{ answer.published_date }}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="card-text">
+                        {{ answer.text|truncatechars:30 }}
+                    </div>
+                </div>
+            </div>
             {% empty %}
             <p>Brak komentarzy :(</p>
         {% endfor %}
