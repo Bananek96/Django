@@ -41,7 +41,7 @@
                     <h5 class="card-title">
                         <a href="{% url 'users:index' pk=answer.author.id %}">{{ answer.author }}</a>
                         {% if user == answer.author %}
-                        <a href="{% url 'forum:delete_answer' an=answer.id %}">Usun</a>
+                        <a href="{% url 'forum:delete_answer' an=answer.id %}">[Usun]</a>
                         {% endif %}
                     </h5>
                     <h6 class="card-subtitle">
